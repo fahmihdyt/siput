@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	       <div class="widget-content">
 	       		<table class='table table-striped'>
 	       			<thead>
-	       				<th>Deadline</th>
+	       				<th>Request Date</th>
 	       				<th>Event</th>
 	       				<th>Type</th>	       				
 	       				<th>Department</th>
@@ -37,7 +37,7 @@ $this->params['breadcrumbs'][] = $this->title;
 	       					$event=$row->getEvent($row['id_event']);
 						?>
 	       				<tr>
-	       					<td><?= $row['deadline']; ?></td>
+	       					<td><?= $row['tanggal']; ?></td>
 	       					<td><a href='<?=Yii::$app->params['url']?>media/view?id=<?= $row['id'] ?>'><?= $event['nama']; ?></a></td>
 	       					<td><?= $row['jenis']; ?></td>
 	       					<td><?= $row->findCreator($event['creator']) ?></td>
@@ -86,11 +86,11 @@ $this->params['breadcrumbs'][] = $this->title;
 	       <div class="widget-content">
 	       		<table class='table table-striped tables'>
 	       			<thead>
-	       				<th>No.</th>
+	       				<!-- <th>No.</th> -->
 	       				<th>Event</th>
 	       				<th>Type</th>
 	       				<th>Department</th>	       				
-	       				<!-- <th>Designer</th> -->
+	       				<th>Pub.Number</th> 
 	       				<th>Action</th>
 	       			</thead>
 	       			<tbody>
@@ -99,13 +99,13 @@ $this->params['breadcrumbs'][] = $this->title;
 							
 						?>
 	       				<tr>
-	       					<td><?= $i++ ?></td>
+	       					<!-- <td><?= $i++ ?></td> -->
 	       					<td><a href='<?=Yii::$app->params['url']?>media/view?id=<?= $row['id'] ?>'><?= $event['nama']; ?></a></td>
 	       					<td><?= $row['jenis']; ?></td>
 	       					<td><?= $row->findCreator($event['creator']) ?></td>
-	       					<!-- <td><?= $row->penanggung_jawab ?></td> -->
-	       					<td><a href='<?= Yii::$app->params['url']?>media/modify?id=<?=$row['id']?>'><button class='btn btn-primary'>Modify</button></a>
-	       						<a href='<?= Yii::$app->params['url']?>media/submit?id=<?=$row['id']?>'><button class='btn btn-primary'>Add Design</button></a>
+	       					<td><?= $row->plat?></td>
+	       					<td><a href='<?= Yii::$app->params['url']?>media/modify?id=<?=$row['id']?>'><button class='btn btn-primary'>Edit</button></a>
+	       						<a href='<?= Yii::$app->params['url']?>media/submit?id=<?=$row['id']?>'><button class='btn btn-primary'>Add</button></a>
 	       					</td>
 	       				</tr> <?php } ?>
 	       			</tbody>

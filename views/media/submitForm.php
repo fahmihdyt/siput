@@ -18,6 +18,10 @@ $this->params['breadcrumbs'][] = $this->title;
        		<div class="media-form">
 			
 			<table>
+				<tr>
+		      		<td width='130px'><label>Publication Number</label></td>
+		       		<td>: <?= $media['plat'] ?></td>
+		       	</tr> 
 		      	<tr>
 		      		<td width='130px'><label>Event Name</label></td>
 		       		<td>: <?= $event['nama'] ?></td>
