@@ -92,12 +92,7 @@ $this->params['breadcrumbs'][] = $this->title;
             		<td>: <?= $media->desain_kasar ?></td>
             	</tr>         		
             </table><br>
-       		 <p>
-       		 	<?php if(is_null($media['plat'])){?>
-       		 		<?= Html::a('Set Publication Number', ['setnumber','id'=>$media['id']], ['class' => 'btn btn-primary']) ?>
-       		 	<?php } ?>
-       		 	<?= Html::a('Back', ['index'], ['class' => 'btn btn-default']) ?>
-       		 	</p>
+       		 <p><?= Html::a('Back', ['index'], ['class' => 'btn btn-primary']) ?></p>
        </div>
     </div>
     </div> 

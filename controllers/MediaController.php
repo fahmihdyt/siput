@@ -38,17 +38,6 @@ class MediaController extends Controller
      */
     public function actionIndex()
     {
-    	/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-		
-		
         $data=Media::findAll(["status"=>'new']);
 		$data2=Media::findAll(["status"=>'approved']);
 		$data3=Media::findAll(['status'=>'done']);
@@ -66,16 +55,6 @@ class MediaController extends Controller
      */
     public function actionView($id)
     {
-    	/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-		
     	$media=$this->findModel($id);
     	$event=event::findOne(['id'=>$media['id_event']]);
 		$resultMedia=ResultMedia::findAll(['id_publikasi'=>$id]);
@@ -93,16 +72,6 @@ class MediaController extends Controller
      */
     public function actionCreate()
     {
-    	/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-		
         $model = new Media();
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -115,17 +84,6 @@ class MediaController extends Controller
     }
 	
 	public function actionSubmit($id){
-		
-		/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-		
 		$media=$this->findModel($id);
 		$model=new ResultMedia();
 		$event=event::findOne(['id'=>$media['id_event']]);
@@ -161,17 +119,6 @@ class MediaController extends Controller
 	}
 	
 	public function actionModify($id){
-		
-		/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-		
 		$media=$this->findModel($id);
 		$model=ResultMedia::findOne(['id_publikasi'=>$id]);
 		$event=event::findOne(['id'=>$media['id_event']]);
@@ -222,17 +169,6 @@ class MediaController extends Controller
      */
     public function actionUpdate($id)
     {
-    	
-		/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-		
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
@@ -252,33 +188,12 @@ class MediaController extends Controller
      */
     public function actionDelete($id)
     {
-    	/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-		
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
     }
 	
-	public function actionSetnumber($id){
-		/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-		
-		//inisiasi variable
+	public function actionApprove($id){
 		$model=$this->findModel($id);
 		$event=event::findOne(['id'=>$model['id_event']]);
 		$creator=Akun::findOne(['id'=>$event['creator']]);
@@ -288,43 +203,17 @@ class MediaController extends Controller
 		$publikasi=(int)$publikasi['value'];
 		$publikasi+=1;
 		$publikasix=Setting::findOne(['name'=>'last_design']);
-		$plat="FUKI/".$settingTahun['value']."/".$bulan."/".$creator['kode_publikasi']."/".$publikasi;
-		$model->plat=$plat;
-		
-		//publikasi number save process
-		if($model->save()){
-				$publikasix->value=(string)$publikasi;
-				$publikasix->save();
-				return $this->redirect(['index']);
-			}
-		
-		
-		
-		
-	}
-	
-	public function actionApprove($id){
-		/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-		
-		$model=$this->findModel($id);
-		$event=event::findOne(['id'=>$model['id_event']]);
-		$creator=Akun::findOne(['id'=>$event['creator']]);
-		
 						
-		if ($model->load(Yii::$app->request->post())) {	
-							
+		if ($model->load(Yii::$app->request->post())) {			
+			
+			//set publikasi plat
+			$plat="FUKI/".$settingTahun['value']."/".$bulan."/".$creator['kode_publikasi']."/".$publikasi;
+			$model->plat=$plat;
 			$model->status='approved';
 			if($model->save()){
-				return $this->redirect(['index']);
-			}
+				$publikasix->value=(string)$publikasi;
+				$publikasix->save();
+            	return $this->redirect(['index']);}
         } else {
             return $this->render('approveForm', [
                 'model' => $model,
@@ -343,16 +232,6 @@ class MediaController extends Controller
      */
     protected function findModel($id)
     {
-    	/*------------VALIDASI & AUTHORIZATION----------*/
-       	if (\Yii::$app->user->isGuest) {
-            return $this->goHome();
-        }
-		$role=Yii::$app->user->identity->departemen;
-		
-		if($role!='media'){
-			return $this->goHome();
-		}
-				
         if (($model = Media::findOne($id)) !== null) {
             return $model;
         } else {
