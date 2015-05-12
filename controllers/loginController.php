@@ -55,7 +55,7 @@ class loginController extends Controller
         if (!\Yii::$app->user->isGuest) {
             return $this->redirect('/siput/web/index.php/home');
         }
-
+		
         $model = new LoginForm();
         if ($model->load(Yii::$app->request->post()) && $model->login()) {
             return $this->goBack();
