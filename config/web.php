@@ -4,19 +4,15 @@ $params = require(__DIR__ . '/params.php');
 
 $config = [
     'id' => 'basic',
-    'defaultRoute'=>'login',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
-            'cookieValidationKey' => 'fahmihidayat90',
+            'cookieValidationKey' => 'trackingajib',
         ],
         'cache' => [
             'class' => 'yii\caching\FileCache',
-        ],
-        'urlManager' =>[
-        	'enablePrettyUrl' => true,
         ],
         'user' => [
             'identityClass' => 'app\models\User',

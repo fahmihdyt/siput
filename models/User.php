@@ -2,101 +2,102 @@
 
 namespace app\models;
 
-use Yii;
-use \yii\web\IdentityInterface;
-
-/**
- * This is the model class for table "akun".
- *
- * @property string $nik
- * @property string $nama
- * @property string $gender
- * @property string $email
- * @property string $username
- * @property string $password
- * @property string $alamat
- * @property integer $jabatan
- * @property string $no_telp
- *
- * @property Aktivitas[] $aktivitas
- * @property Jabatan $jabatan0
- * @property Issue[] $issues
- * @property Pengumuman[] $pengumumen
- * @property Projectteam[] $projectteams
- */
-class user extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
+class User extends \yii\base\Object implements \yii\web\IdentityInterface
 {
-	
-	public $authKey='simanproPtJAL';
+    public $id;
+    public $username;
+    public $password;
+    public $authKey;
+    public $accessToken;
+
+    private static $users = [
+        '100' => [
+            'id' => '100',
+            'username' => 'admin',
+            'password' => 'admin',
+            'authKey' => 'test100key',
+            'accessToken' => '100-token',
+        ],
+        '101' => [
+            'id' => '101',
+            'username' => 'demo',
+            'password' => 'demo',
+            'authKey' => 'test101key',
+            'accessToken' => '101-token',
+        ],
+    ];
+
     /**
      * @inheritdoc
      */
-    public static function tableName()
+    public static function findIdentity($id)
     {
-        return 'akun';
+        return isset(self::$users[$id]) ? new static(self::$users[$id]) : null;
     }
 
     /**
      * @inheritdoc
      */
-    public function rules()
+    public static function findIdentityByAccessToken($token, $type = null)
     {
-        return [
-            [['username', 'password'], 'required'],
-            ['password','validatePassword']
-        ];
-    }
+        foreach (self::$users as $user) {
+            if ($user['accessToken'] === $token) {
+                return new static($user);
+            }
+        }
 
-    /**
-     * @inheritdoc
-     */
-    public function attributeLabels()
-    {
-        return [
-           
-            'username' => 'Username',
-            'password' => 'Password',
-       ];
-    }
-
-	
-	public function getId(){
-		return $this->id;
-	}
-	
-	public static function findIdentity($id){
-		return User::findOne(['id'=>$id]);
-	}
-	
-	public static function findByUsername($username)
-    {
-       		
-		if($hasil=User::findOne(['username' => $username])){
-			return $hasil;
-		}
         return null;
     }
-	
-	public function validatePassword($passwords,$username)
+
+    /**
+     * Finds user by username
+     *
+     * @param  string      $username
+     * @return static|null
+     */
+    public static function findByUsername($username)
     {
-    	$passwords = md5($passwords);	
-    	$password=User::findOne(['username' => $username, 'password' => $passwords]);
-        if(count($password)==0){
-        	return false;
+        foreach (self::$users as $user) {
+            if (strcasecmp($user['username'], $username) === 0) {
+                return new static($user);
+            }
         }
-		else{
-			return true;
-		}
+
+        return null;
     }
-	
-	public function getAuthKey()
+
+    /**
+     * @inheritdoc
+     */
+    public function getId()
     {
-    	return $this->authKey;
+        return $this->id;
     }
-	
-	public function validateAuthKey($authKey)
+
+    /**
+     * @inheritdoc
+     */
+    public function getAuthKey()
+    {
+        return $this->authKey;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function validateAuthKey($authKey)
     {
         return $this->authKey === $authKey;
     }
-	
+
+    /**
+     * Validates password
+     *
+     * @param  string  $password password to validate
+     * @return boolean if password provided is valid for current user
+     */
+    public function validatePassword($password)
+    {
+        return $this->password === $password;
+    }
 }
